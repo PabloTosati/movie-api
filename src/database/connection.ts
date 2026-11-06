@@ -1,7 +1,8 @@
 import sqlite3 from 'sqlite3';
 import path from 'path';
 
-const DB_PATH = path.resolve(__dirname, '../../database.sqlite');
+// DB_PATH can point to any file, or to ':memory:' (used by the integration tests).
+const DB_PATH = process.env.DB_PATH ?? path.resolve(__dirname, '../../database.sqlite');
 
 let db: sqlite3.Database | null = null;
 
@@ -17,6 +18,17 @@ export function getDatabase(): sqlite3.Database {
     db.run('PRAGMA foreign_keys = ON');
   }
   return db;
+}
+
+export function closeDatabase(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (!db) return resolve();
+    db.close((err) => {
+      if (err) return reject(err);
+      db = null;
+      resolve();
+    });
+  });
 }
 
 export function runQuery(sql: string, params: unknown[] = []): Promise<{ lastID: number; changes: number }> {

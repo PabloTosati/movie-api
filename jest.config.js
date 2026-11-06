@@ -3,11 +3,11 @@ module.exports = {
   testEnvironment: 'node',
   roots: ['<rootDir>/src'],
   testMatch: ['**/*.test.ts'],
+  setupFiles: ['<rootDir>/src/tests/setup.ts'],
   collectCoverageFrom: [
     'src/**/*.ts',
     '!src/index.ts',
-    '!src/database/migrate.ts',
-    '!src/database/connection.ts'
+    '!src/tests/**'
   ],
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov', 'html']

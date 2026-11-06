@@ -1,6 +1,6 @@
 import { runQuery } from './connection';
 
-async function runMigrations(): Promise<void> {
+export async function runMigrations(): Promise<void> {
   console.info('Running database migrations...');
 
   await runQuery(`
@@ -27,7 +27,10 @@ async function runMigrations(): Promise<void> {
   console.info('All migrations completed successfully.');
 }
 
-runMigrations().catch((err) => {
-  console.error('Migration failed:', err);
-  process.exit(1);
-});
+// Allows running this file directly: `npm run migrate`
+if (require.main === module) {
+  runMigrations().catch((err) => {
+    console.error('Migration failed:', err);
+    process.exit(1);
+  });
+}
